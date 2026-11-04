@@ -1,2 +1,348 @@
 <!doctype html>
-<html lang="fr"></html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Fondations superficielles — portance, glissement et tassement, Eurocodes des deux générations</title>
+    <meta
+      name="description"
+      content="Vérification d’une semelle superficielle selon l’Eurocode 7 et l’Eurocode 3, dans leurs deux générations."
+    />
+    <meta name="theme-color" content="#f7f7f6" />
+  </head>
+  <body>
+    <div class="barre">
+      <div class="barre-corps">
+        <span class="barre-nom">webaedificium</span>
+        <div class="barre-actions">
+          <a class="barre-lien" href="https://henri421.github.io/WebAedificium/" target="_blank" rel="noopener">Suite</a>
+          <a class="barre-langue" href="en/" lang="en" hreflang="en">EN</a>
+        </div>
+      </div>
+    </div>
+
+    <header>
+      <h1>Fondations superficielles</h1>
+      <p class="sous-titre">
+        Portance, glissement, excentricité et tassement d’une semelle superficielle, Eurocodes des deux générations.
+      </p>
+      <p class="avertissement">
+        Les valeurs recommandées des normes sont utilisées, faute d’annexe nationale belge.
+        Vérifier ces valeurs avant tout usage sur un ouvrage réel.
+      </p>
+    </header>
+
+    <main>
+      <section id="saisie" aria-label="Saisie">
+        <form id="formulaire" autocomplete="off" novalidate>
+          <div class="generations">
+            <button type="button" data-generation="1re" aria-pressed="true">1<sup>re</sup> génération</button>
+            <button type="button" data-generation="2e" aria-pressed="false">2<sup>e</sup> génération</button>
+          </div>
+
+          <fieldset>
+            <legend>Semelle</legend>
+            <div class="boutons">
+              <button type="button" data-forme="isolee" aria-pressed="true">Isolée</button>
+              <button type="button" data-forme="filante" aria-pressed="false">Filante</button>
+            </div>
+            <label>
+              <span>Largeur B (m)</span>
+              <input type="text" inputmode="decimal" data-champ="B" />
+            </label>
+            <label data-si-forme="isolee">
+              <span>Longueur L (m)</span>
+              <input type="text" inputmode="decimal" data-champ="L" />
+            </label>
+            <label>
+              <span>Profondeur de la base D (m)</span>
+              <input type="text" inputmode="decimal" data-champ="D" />
+            </label>
+            <label>
+              <span>Épaisseur de semelle (m)</span>
+              <input type="text" inputmode="decimal" data-champ="ep" />
+            </label>
+            <label>
+              <span>Poids volumique du béton armé γ<sub>béton</sub> (kN/m³)</span>
+              <input type="text" inputmode="decimal" data-champ="gammaBeton" />
+            </label>
+            <p class="note">
+              En filante, la ligne L disparaît et tout passe par mètre. Épaisseur 0, le poids de la semelle
+              et des terres au-dessus est déjà compris dans V.
+            </p>
+          </fieldset>
+
+          <fieldset>
+            <legend>Actions à la base</legend>
+            <div class="defilement">
+              <table class="actions-saisie">
+                <thead>
+                  <tr>
+                    <th scope="col">Action</th>
+                    <th scope="col" class="n">G</th>
+                    <th scope="col" class="n">Q</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>V (kN)</td>
+                    <td><input type="text" inputmode="decimal" data-champ="VG" aria-label="V permanente" /></td>
+                    <td><input type="text" inputmode="decimal" data-champ="VQ" aria-label="V variable" /></td>
+                  </tr>
+                  <tr>
+                    <td>H selon B (kN)</td>
+                    <td><input type="text" inputmode="decimal" data-champ="HBG" aria-label="H selon B, permanente" /></td>
+                    <td><input type="text" inputmode="decimal" data-champ="HBQ" aria-label="H selon B, variable" /></td>
+                  </tr>
+                  <tr>
+                    <td>M selon B (kN·m)</td>
+                    <td><input type="text" inputmode="decimal" data-champ="MBG" aria-label="M selon B, permanente" /></td>
+                    <td><input type="text" inputmode="decimal" data-champ="MBQ" aria-label="M selon B, variable" /></td>
+                  </tr>
+                  <tr data-si-forme="isolee">
+                    <td>H selon L (kN)</td>
+                    <td><input type="text" inputmode="decimal" data-champ="HLG" aria-label="H selon L, permanente" /></td>
+                    <td><input type="text" inputmode="decimal" data-champ="HLQ" aria-label="H selon L, variable" /></td>
+                  </tr>
+                  <tr data-si-forme="isolee">
+                    <td>M selon L (kN·m)</td>
+                    <td><input type="text" inputmode="decimal" data-champ="MLG" aria-label="M selon L, permanente" /></td>
+                    <td><input type="text" inputmode="decimal" data-champ="MLQ" aria-label="M selon L, variable" /></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="note">
+              M selon B décale la charge dans le sens de B, M selon L dans le sens de L.
+              Les deux lignes « selon L » disparaissent en filante.
+            </p>
+          </fieldset>
+
+          <fieldset>
+            <legend>Sol sous la base</legend>
+            <div class="boutons">
+              <button type="button" data-comportement="draine" aria-pressed="true">Drainé</button>
+              <button type="button" data-comportement="non_draine" aria-pressed="false">Non drainé</button>
+              <button type="button" data-comportement="les_deux" aria-pressed="false">Les deux</button>
+            </div>
+            <label data-si-sol="drainee">
+              <span>Angle de frottement interne φ’<sub>k</sub> (°)</span>
+              <input type="text" inputmode="decimal" data-champ="phi" />
+            </label>
+            <label data-si-sol="drainee">
+              <span>Cohésion c’<sub>k</sub> (kPa)</span>
+              <input type="text" inputmode="decimal" data-champ="c" />
+            </label>
+            <label data-si-sol="non-drainee">
+              <span>Résistance non drainée c<sub>u,k</sub> (kPa)</span>
+              <input type="text" inputmode="decimal" data-champ="cu" />
+            </label>
+            <label class="case" data-si-sol="non-drainee">
+              <input type="checkbox" data-champ="eauInterface" />
+              <span>Eau ou air peut atteindre l’interface</span>
+            </label>
+            <label>
+              <span>Poids volumique γ (kN/m³)</span>
+              <input type="text" inputmode="decimal" data-champ="gamma" />
+            </label>
+            <label>
+              <span>Poids volumique saturé γ<sub>sat</sub> (kN/m³)</span>
+              <input type="text" inputmode="decimal" data-champ="gammaSat" />
+            </label>
+            <label class="case">
+              <input type="checkbox" data-champ="baseRugueuse" />
+              <span>Base rugueuse, béton coulé en place</span>
+            </label>
+            <div class="sous-titre">Nappe</div>
+            <label class="case">
+              <input type="checkbox" data-champ="avecNappe" />
+              <span>Nappe à prendre en compte</span>
+            </label>
+            <label data-si-nappe>
+              <span>Profondeur D<sub>w</sub> (m)</span>
+              <input type="text" inputmode="decimal" data-champ="Dw" />
+            </label>
+            <p class="note">
+              « Non drainé » remplace φ’<sub>k</sub> et c’<sub>k</sub> par c<sub>u,k</sub> et fait apparaître
+              la case « eau ou air peut atteindre l’interface », cochée par défaut.
+              Le choix évite le faux refus sur un sable. Un seul sol ici, les couches ne servent qu’au tassement.
+            </p>
+          </fieldset>
+
+          <fieldset>
+            <legend>Génération et approche</legend>
+            <div class="groupe" data-groupe="1re">
+              <label>
+                <span>Approche de calcul</span>
+                <select data-champ="approche1">
+                  <option value="DA1">DA1 (combinaisons 1 et 2)</option>
+                  <option value="DA2">DA2</option>
+                  <option value="DA3">DA3</option>
+                </select>
+              </label>
+            </div>
+            <div class="groupe" data-groupe="2e">
+              <label>
+                <span>Combinaison d’approche</span>
+                <select data-champ="approche2">
+                  <option value="a+b">a + b</option>
+                  <option value="c">c</option>
+                  <option value="d">d</option>
+                </select>
+              </label>
+              <label>
+                <span>Classe de conséquences</span>
+                <select data-champ="consequences">
+                  <option value="CC1">CC1</option>
+                  <option value="CC2">CC2</option>
+                  <option value="CC3">CC3</option>
+                </select>
+              </label>
+              <label class="case">
+                <input type="checkbox" data-champ="dimensionsControlees" />
+                <span>Dimensions contrôlées</span>
+              </label>
+              <label class="case">
+                <input type="checkbox" data-champ="profondeurComptee" />
+                <span>Compter la profondeur</span>
+              </label>
+            </div>
+            <p class="note">
+              En basculant, les données restent. La 1<sup>re</sup> génération propose DA1, DA2 et DA3.
+              La 2<sup>e</sup> propose (a) + (b), (c) ou (d), la classe de conséquences CC2 par défaut,
+              et deux cases, « dimensions contrôlées » et « compter la profondeur ».
+            </p>
+          </fieldset>
+
+          <details class="volet">
+            <summary>Tassement (facultatif)</summary>
+            <div>
+              <label class="case">
+                <input type="checkbox" data-champ="avecTassement" />
+                <span>Calculer le tassement</span>
+              </label>
+              <label class="case">
+                <input type="checkbox" data-champ="pNette" />
+                <span>Pression nette (p − q)</span>
+              </label>
+              <div class="sous-titre">Méthode élastique</div>
+              <label class="case">
+                <input type="checkbox" data-champ="avecElastique" />
+                <span>Calculer par la méthode élastique</span>
+              </label>
+              <label>
+                <span>Module E<sub>m</sub> (MPa)</span>
+                <input type="text" inputmode="decimal" data-champ="Em" />
+              </label>
+              <label>
+                <span>Coefficient de Poisson ν</span>
+                <input type="text" inputmode="decimal" data-champ="nu" />
+              </label>
+              <label>
+                <span>Fondation</span>
+                <select data-champ="raideur">
+                  <option value="rigide">Rigide</option>
+                  <option value="souple">Souple</option>
+                </select>
+              </label>
+              <div class="sous-titre">Couches compressibles, sous la base</div>
+              <div class="defilement">
+                <table class="couches">
+                  <thead>
+                    <tr>
+                      <th scope="col">h (m)</th>
+                      <th scope="col">γ’ (kN/m³)</th>
+                      <th scope="col">C<sub>c</sub></th>
+                      <th scope="col">C<sub>s</sub></th>
+                      <th scope="col">e<sub>0</sub></th>
+                      <th scope="col">σ’<sub>p</sub> (kPa)</th>
+                      <th scope="col"><span class="clause">Retirer</span></th>
+                    </tr>
+                  </thead>
+                  <tbody data-role="couches"></tbody>
+                </table>
+              </div>
+              <div class="boutons">
+                <button type="button" data-action="ajouter-couche">Ajouter une couche</button>
+              </div>
+              <p class="note">
+                σ’<sub>p</sub> est obligatoire, l’outil refuse plutôt que d’inventer une valeur.
+                Le volet est replié et vide par défaut.
+              </p>
+            </div>
+          </details>
+
+          <fieldset>
+            <legend>Hors périmètre</legend>
+            <p class="note">
+              Ne sont pas traités par cet outil la fondation circulaire, la base ou le terrain inclinés,
+              la couche faible sous la base, le soulèvement UPL, la butée sur le front et la stabilité
+              générale. L’annexe nationale n’est pas prise en compte.
+            </p>
+          </fieldset>
+
+          <p class="avertissement">
+            Sans annexe nationale, les valeurs recommandées des normes sont retenues.
+          </p>
+        </form>
+      </section>
+
+      <div class="colonne">
+        <section id="sorties" aria-label="Résultats">
+          <h2>Résultats</h2>
+          <p class="erreur" data-role="erreur" hidden></p>
+          <div class="boutons" data-role="vues"></div>
+          <div class="boutons" data-role="sens"></div>
+          <div class="boutons" data-role="analyses"></div>
+          <div data-role="verdicts"></div>
+          <div data-role="volets"></div>
+        </section>
+
+        <section aria-label="Dessin">
+          <h2>Dessin</h2>
+          <div class="boutons">
+            <label class="case">
+              <input type="checkbox" data-option="cotes" />
+              <span>Cotes</span>
+            </label>
+          </div>
+          <div data-role="coupe"></div>
+          <div data-role="plan"></div>
+        </section>
+
+        <section aria-label="Exports">
+          <h2>Exports</h2>
+          <label>
+            <span>Projet</span>
+            <input type="text" data-role="projet" />
+          </label>
+          <label>
+            <span>Élément</span>
+            <input type="text" data-role="element" />
+          </label>
+          <div class="boutons">
+            <button type="button" data-action="exporter-note">Note de calcul</button>
+            <button type="button" data-action="exporter-coupe">Coupe SVG</button>
+            <button type="button" data-action="exporter-resultats">Résultats CSV</button>
+            <button type="button" data-action="enregistrer">Enregistrer la saisie</button>
+            <button type="button" data-action="reinitialiser">Réinitialiser</button>
+          </div>
+          <label>
+            <span>Ouvrir une saisie enregistrée</span>
+            <input type="file" data-role="ouvrir" accept=".json,application/json" />
+          </label>
+          <p class="note">
+            La saisie est conservée dans ce navigateur. Les fichiers ouverts sont lus localement,
+            sans envoi sur le réseau.
+          </p>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      <p>Fondations superficielles · outil local de vérification · Eurocode 7.</p>
+    </footer>
+
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>
