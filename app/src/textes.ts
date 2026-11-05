@@ -10,6 +10,33 @@ const FR = {
     rienAExporter: 'Aucun calcul valide à exporter : corriger la saisie.',
     nouvelleVersion: 'Une nouvelle version est disponible. Recharger maintenant ?',
   },
+  note: {
+    element: 'Semelle',
+    portance: 'Portance',
+    glissement: 'Glissement',
+    excentricite: 'Excentricité',
+    coefficients: 'Coefficients partiels',
+    legendeCoupe: 'Coupe cotée du cas gouvernant : terrain, nappe, semelle, résultante et rectangle sur B′.',
+    legendePlan: 'Plan du cas gouvernant : surface efficace, point d’application, losange et ellipse de service.',
+    recommandations1re: [
+      'Valeurs recommandées : approche DA1 (combinaisons 1 et 2) par défaut ; DA2 et DA3 disponibles.',
+      'Coefficients partiels : ceux de chaque combinaison, avec leur source dans le volet dédié.',
+    ],
+    recommandations2e: [
+      'Valeurs recommandées : approche (a) + (b) par défaut ; (c) et (d) disponibles.',
+      'Valeurs recommandées : classe de conséquences CC2 par défaut.',
+      'Coefficients partiels : ceux de chaque combinaison, avec leur source dans le volet dédié.',
+    ],
+    alertes: {
+      excentriciteB: 'Excentricité supérieure au tiers de B.',
+      excentriciteL: 'Excentricité supérieure au tiers de L.',
+      elsPermanentes: 'Excentricité sous actions permanentes au-delà de la limite de service.',
+      elsTotales: 'Excentricité sous actions totales au-delà de la limite de service.',
+    },
+    mention: 'Aucune annexe nationale n’est appliquée : les valeurs recommandées des Eurocodes sont retenues.',
+    horsPerimetre:
+      'Hors périmètre : fondation circulaire, base ou terrain inclinés, couche faible sous la base, soulèvement UPL, butée sur le front, stabilité générale, annexe nationale.',
+  },
   vue: {
     entrees: {
       titre: 'Entrées',
@@ -134,8 +161,28 @@ const FR = {
       'Glissement drainé sans c′ ; tan δ = tan φ′ sur base rugueuse, tan(2φ′/3) sinon.',
       'Tassement sur dimensions nominales et charges caractéristiques.',
     ],
+    dessin: {
+      coupe: 'Coupe',
+      plan: 'Plan',
+      terrain: 'Terrain naturel',
+      nappe: 'Nappe',
+      horsDessin: 'au-delà du dessin',
+      effort: 'N',
+      tranchant: 'T',
+      largeurEfficace: 'B′',
+      aire: 'A′',
+      coteB: 'B',
+      coteL: 'L',
+      coteD: 'D',
+      coteEp: 'ép.',
+      parMetre: 'par mètre',
+      surfaceEfficace: 'Surface efficace',
+      pointApplication: 'Point d’application',
+      losange: 'Losange de service',
+      ellipse: 'Ellipse de service',
+    },
     resultats: 'Résultats',
-    unites: { kN: 'kN', kNm: 'kN·m', m: 'm', kPa: 'kPa' },
+    unites: { kN: 'kN', kNm: 'kN·m', m: 'm', m2: 'm²', kPa: 'kPa' },
   },
 };
 
@@ -145,6 +192,33 @@ const EN: Textes = {
   messages: {
     rienAExporter: 'No valid calculation to export: correct the input.',
     nouvelleVersion: 'A new version is available. Reload now?',
+  },
+  note: {
+    element: 'Footing',
+    portance: 'Bearing',
+    glissement: 'Sliding',
+    excentricite: 'Eccentricity',
+    coefficients: 'Partial factors',
+    legendeCoupe: 'Dimensioned section of the governing case: ground, water table, footing, resultant and rectangle on B′.',
+    legendePlan: 'Plan of the governing case: effective area, point of application, service diamond and service ellipse.',
+    recommandations1re: [
+      'Recommended values: design approach DA1 (combinations 1 and 2) by default; DA2 and DA3 available.',
+      'Partial factors: those of each combination, with their source in the dedicated panel.',
+    ],
+    recommandations2e: [
+      'Recommended values: design approach (a) + (b) by default; (c) and (d) available.',
+      'Recommended values: consequence class CC2 by default.',
+      'Partial factors: those of each combination, with their source in the dedicated panel.',
+    ],
+    alertes: {
+      excentriciteB: 'Eccentricity greater than a third of B.',
+      excentriciteL: 'Eccentricity greater than a third of L.',
+      elsPermanentes: 'Eccentricity under permanent actions beyond the serviceability limit.',
+      elsTotales: 'Eccentricity under total actions beyond the serviceability limit.',
+    },
+    mention: 'No national annex is applied: the recommended values of the Eurocodes are used.',
+    horsPerimetre:
+      'Out of scope: circular footing, inclined base or ground, weak layer below the base, UPL uplift, passive resistance on the front, overall stability, national annex.',
   },
   vue: {
     entrees: {
@@ -270,8 +344,28 @@ const EN: Textes = {
       'Drained sliding without c′; tan δ = tan φ′ on a rough base, tan(2φ′/3) otherwise.',
       'Settlement on nominal dimensions and characteristic loads.',
     ],
+    dessin: {
+      coupe: 'Section',
+      plan: 'Plan',
+      terrain: 'Ground level',
+      nappe: 'Groundwater',
+      horsDessin: 'beyond the drawing',
+      effort: 'N',
+      tranchant: 'T',
+      largeurEfficace: 'B′',
+      aire: 'A′',
+      coteB: 'B',
+      coteL: 'L',
+      coteD: 'D',
+      coteEp: 'th.',
+      parMetre: 'per metre',
+      surfaceEfficace: 'Effective area',
+      pointApplication: 'Point of application',
+      losange: 'Service diamond',
+      ellipse: 'Service ellipse',
+    },
     resultats: 'Results',
-    unites: { kN: 'kN', kNm: 'kN·m', m: 'm', kPa: 'kPa' },
+    unites: { kN: 'kN', kNm: 'kN·m', m: 'm', m2: 'm²', kPa: 'kPa' },
   },
 };
 

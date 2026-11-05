@@ -291,18 +291,19 @@
         <section id="sorties" aria-label="Résultats">
           <h2>Résultats</h2>
           <p class="erreur" data-role="erreur" hidden></p>
-          <div class="boutons" data-role="vues"></div>
-          <div class="boutons" data-role="sens"></div>
-          <div class="boutons" data-role="analyses"></div>
           <div data-role="verdicts"></div>
           <div data-role="volets"></div>
         </section>
 
         <section aria-label="Dessin">
           <h2>Dessin</h2>
+          <p class="note">Efforts affichés : le cas gouvernant s’ouvre d’abord.</p>
+          <div class="boutons" data-role="vues"></div>
+          <div class="boutons" data-role="sens"></div>
+          <div class="boutons" data-role="analyses"></div>
           <div class="boutons">
             <label class="case">
-              <input type="checkbox" data-option="cotes" />
+              <input type="checkbox" data-option="cotes" checked />
               <span>Cotes</span>
             </label>
           </div>

@@ -32,3 +32,48 @@
   - Sans filtre : 25 réussis, 69 échecs ; `form.test` échoue seulement sur les stubs `a ecrire` de `dessin.ts` (T3) ; `anglais.test` (T5) échoue ; `page.test` vert.
   - `typecheck.mjs .` : 0 erreur (TypeScript 6.0.3).
 - **Audit (Claude)** : excentricité corrigée, `Resultat` porte maintenant la largeur nominale `B` (ajoutée par `verifier`), et la carte l'utilise. Le bilan sans filtre est faussé tant que `dessin.ts` lève au chargement : les fichiers lancés un par un sont verts (`vue.test` 119, `form.test` 24, `page.test` 12, noyau 40).
+
+## T3 interface : dessins
+
+**Fichiers modifiés** : `app/src/dessin.ts` (vuesDisponibles, vueGouvernante, coupe, planSvg), `app/src/textes.ts` (clé `vue.dessin` et `unites.m2`, FR et EN), `app/src/style.css` (règles ajoutées en fin de fichier pour les classes du dessin).
+
+**Décisions**
+- Largeur selon B : parmi `Bp` et `Lp`, celle la plus proche de `B - 2 e_B` se lit selon B, l'autre donne la longueur efficace. Nécessaire pour le test 2e (Bp du noyau) et pour le cas permuté.
+- Rectangle sur B' tracé sous la base, aligné sur le bord droit de la semelle (comme la maquette), épaisseur 0,5 e. Sa hauteur n'est pas une grandeur réelle.
+- Nappe au-delà de D + 2,5 m tracée à cette profondeur, libellé avec la valeur réelle et « au-delà du dessin ».
+- Cas dégénérés (soulèvement, hors base, non calculable) : pas de surface efficace, messages de `vue.alertes`.
+
+**Points douteux**
+- `Bd` (2e génération) non utilisé : `semelle.ts` n'a été lu que jusqu'à la ligne 210. Le choix de la largeur ci-dessus contourne le problème sans le résoudre.
+- Couleur de la nappe : le jeton `--eau` de la maquette n'existe pas dans `style.css`, j'ai pris `--compression`.
+- Contrôle visuel du rendu (T3 le prévoit) non fait.
+
+**Statut des tests**
+- `dessin.test` : 49/49 réussis.
+- `vue.test` 119/119, `form.test` 24/24, `page.test` 12/12 : verts.
+- `typecheck` : 1 erreur, dans `app/src/note.ts:143` (`avertissements` absent de `Resultat`), donc T4. Aucune erreur dans `dessin.ts`.
+
+## T4 interface : note et exports
+
+**Fichiers modifiés** : `app/src/note.ts` (noteDuCalcul), `app/src/export.ts` (STYLES_TRACE), `app/src/textes.ts` (clés racine `note` et `note.alertes`, FR et EN). Rien d'autre.
+
+**Décisions**
+- Sections de la note rangées par symbole : charges (V, H, M), hypothèses (génération, approche, classe, dimensions, profondeur, D_w), géométrie (B, L, D, e_s, γ_béton), matériaux pour le reste (sol, tassement, couches).
+- Calculs : `blocsResultat(r).slice(1)`, en écartant le premier bloc (« Résultats »), qui affiche des clés brutes (`portanceDrainee`) ; les coefficients partiels suivent, un bloc par combinaison, avec leur source.
+- Alertes : le noyau porte `r.alertes` (clés `hors_base`, `soulevement`, `excentricite_B`, `els_permanentes`…), pas `avertissements`. Elles sont traduites en clair dans la note.
+- Verifications : portance et glissement par combinaison et par analyse, pire cas des deux sens ; excentricité 2e par `permanentes` et `totales` ; 1re par le rapport e_B/(B/3).
+- Hypothèses et hors périmètre : textes statiques, mention « annexe nationale » et liste du hors périmètre de PLAN-interface.md.
+- `STYLES_TRACE` : classes relevées dans `dessin.ts` (terrain, sol, nappe, semelle, efficace, resultante, effort-t, losange, ellipse-service, point-application, cote, etc.).
+
+**Points douteux**
+- Le rapport e_B/(B/3) de l'excentricité 1re est recalculé dans `note.ts` : `vue.ts` ne l'exporte pas. Même formule que la carte, à garder synchronisé.
+- Symboles des coefficients sans tiret bas (`γG,dst`, `γφ′`) : avec un `_` après une lettre grecque, la note affiche le tiret brut (le test « texte visible » le signale).
+- Les recommandations de la note (DA1, (a)+(b), CC2) sont des textes fixes, pas des valeurs lues dans la saisie : une saisie différente ne les modifie pas.
+- Le format JSON `fondations-superficielles/1` est dans `form.ts` (`serialiser`), pas dans `export.ts`.
+- Rendu de la note et des classes SVG non contrôlé visuellement.
+
+**Statut des tests**
+- `lancer.mjs . note.test` : 77/77.
+- `vue.test` 119/119, `form.test` 24/24, `page.test` 12/12 : verts.
+- `typecheck.mjs .` : 0 erreur (TypeScript 6.0.3).
+- **Audit T3 et T4 (Claude)** : la largeur efficace en plan part de la largeur de calcul (Bd = B - 0,1 m en 2e génération sans dimensions contrôlées) avant de choisir entre B' et L'. Boutons du dessin refaits dans `main.ts` : trois rangées (combinaison, sens, analyse seulement en « Les deux »), libellés en clair au lieu du JSON brut, comparaison des vues par valeur (le bouton actif restait éteint), rangées déplacées dans la section Dessin, cotes cochées par défaut comme dans la maquette. Tests : 325 réussis, seuls les 34 de `anglais.test` (T5) échouent ; typage sans erreur.
