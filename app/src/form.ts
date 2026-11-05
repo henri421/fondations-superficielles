@@ -82,7 +82,7 @@ export type Lecture = { ok: true; calcul: Calcul } | { ok: false; message: strin
  * Le resultat du noyau, avec la generation, les coefficients de chaque combinaison
  * et la largeur nominale B saisie (le noyau rend B' <= L', donc B ne se deduit pas de B').
  */
-export type Resultat = ResultatSemelle & { generation: Generation; coefficients: Combinaison[]; B: number };
+export type Resultat = ResultatSemelle & { generation: Generation; coefficients: Combinaison[]; B: number; pNette: boolean | null };
 
 export function saisieParDefaut(): Saisie {
   return {
@@ -252,6 +252,7 @@ export function verifier(calcul: Calcul): Resultat {
       generation: '1re',
       coefficients: combinaisons1g(calcul.approche, p),
       B: calcul.donnees.B,
+      pNette: calcul.donnees.tassement?.pNette ?? null,
     };
   }
   const p = profil2g();
@@ -260,6 +261,7 @@ export function verifier(calcul: Calcul): Resultat {
     generation: '2e',
     coefficients: combinaisons2g(calcul.options.approche, calcul.options.consequences, p),
     B: calcul.donnees.B,
+    pNette: calcul.donnees.tassement?.pNette ?? null,
   };
 }
 

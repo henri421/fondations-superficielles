@@ -205,7 +205,7 @@ function groupeTassement(r: Resultat): string {
   return (
     `<section class="groupe-verdicts" data-groupe="tassement"><h2>${t.groupes.tassement}</h2>` +
     `<div class="verdict constat"><h3>${t.cartes.tassement} <span class="clause">${t.clauses.tassement}</span></h3>` +
-    `<p>${t.tassement.pression} = ${aff(ts.p)} ${t.unites.kPa}${el}${co}</p></div>` +
+    `<p>${t.tassement.pression}${r.pNette === null ? '' : ` ${r.pNette ? t.entrees.nette : t.entrees.brute}`} = ${aff(ts.p)} ${t.unites.kPa}${el}${co}</p></div>` +
     `<span class="note">${t.tassement.constat}</span></section>`
   );
 }

@@ -627,4 +627,13 @@ svg .contrainte { fill: var(--compression); fill-opacity: 0.12; stroke: var(--co
 svg .contrainte-fleche { stroke: var(--compression); stroke-width: 1; }
 svg .meyer { fill: none; stroke: var(--traction); stroke-dasharray: 5 3; stroke-width: 1.5; }
 svg .legende { fill: var(--texte-faible); font-size: 11px; font-family: var(--sans); }
+svg .sol { stroke: var(--neutre); stroke-width: 1.5; fill: none; }
+svg .nappe { stroke: var(--compression); stroke-width: 1.5; fill: none; }
+svg .efficace { fill: url(#ml-eff); stroke: var(--traction); stroke-width: 1; stroke-dasharray: 5 3; }
+svg .efficace-trame { stroke: var(--traction); stroke-width: 0.8; fill: none; }
+svg .effort-t { stroke: var(--traction); stroke-width: 1.5; }
+svg .point-application { fill: var(--texte); stroke: none; }
+svg .losange { fill: none; stroke: var(--compression); stroke-width: 1.5; }
+svg .ellipse-service { fill: none; stroke: var(--texte-doux); stroke-width: 1; stroke-dasharray: 4 3; }
+svg .alerte-dessin { fill: var(--refus); font-size: 12px; font-weight: 600; font-family: var(--sans); }
 

@@ -44,6 +44,8 @@ const zones = {
   erreur: exige<HTMLElement>('[data-role="erreur"]'),
   couches: exige<HTMLElement>('[data-role="couches"]'),
   vues: exige<HTMLElement>('[data-role="vues"]'),
+  sens: exige<HTMLElement>('[data-role="sens"]'),
+  analyses: exige<HTMLElement>('[data-role="analyses"]'),
   coupe: exige<HTMLElement>('[data-role="coupe"]'),
   plan: exige<HTMLElement>('[data-role="plan"]'),
   verdicts: exige<HTMLElement>('[data-role="verdicts"]'),
@@ -170,21 +172,42 @@ function optionsDessin(): { cotes: boolean } {
   return { cotes: exige<HTMLInputElement>('[data-option="cotes"]').checked };
 }
 
-function legendeVue(v: Vue): string {
-  return typeof v === 'string' ? v : JSON.stringify(v);
+const memeVue = (a: Vue, b: Vue): boolean =>
+  a.combinaison === b.combinaison && a.sens === b.sens && a.analyse === b.analyse;
+
+type Axe = 'combinaison' | 'sens' | 'analyse';
+
+/** Une rangee de boutons par axe (combinaison, sens, analyse), comme dans la maquette. */
+function rangee(vues: Vue[], axe: Axe, libelle: (valeur: string) => string): string {
+  const valeurs = [...new Set(vues.map((v) => v[axe]))];
+  if (valeurs.length < 2 && axe === 'analyse') return '';
+  return valeurs
+    .map(
+      (x) =>
+        `<button type="button" data-axe="${axe}" data-valeur="${echapper(x)}" aria-pressed="${vue !== null && vue[axe] === x}">${echapper(libelle(x))}</button>`
+    )
+    .join('');
 }
 
 function dessinerVues(): void {
   const vues = dernier === null ? [] : vuesDisponibles(dernier.resultat);
-  if (dernier !== null && (vue === null || !vues.some((v) => v === vue))) {
+  if (dernier !== null && (vue === null || !vues.some((v) => memeVue(v, vue as Vue)))) {
     vue = vueGouvernante(dernier.resultat) ?? vues[0] ?? null;
   }
-  zones.vues.innerHTML = vues
-    .map(
-      (v, i) =>
-        `<button type="button" data-vue="${i}" aria-pressed="${v === vue}">${echapper(legendeVue(v))}</button>`
-    )
-    .join('');
+  const t = textes().vue;
+  zones.vues.innerHTML = rangee(vues, 'combinaison', (x) => x);
+  zones.sens.innerHTML = rangee(vues, 'sens', (x) => t.sens[x as keyof typeof t.sens] ?? x);
+  zones.analyses.innerHTML = rangee(vues, 'analyse', (x) => t.analyses[x as keyof typeof t.analyses] ?? x);
+}
+
+/** Change un axe de la vue courante ; garde les deux autres si ce cas existe. */
+function choisirVue(axe: Axe, valeur: string): void {
+  if (dernier === null) return;
+  const vues = vuesDisponibles(dernier.resultat).filter((v) => v[axe] === valeur);
+  const voulu = vue === null ? null : { ...vue, [axe]: valeur };
+  vue = (voulu && vues.find((v) => memeVue(v, voulu as Vue))) ?? vues[0] ?? vue;
+  dessinerVues();
+  renduDessin();
 }
 
 function renduDessin(): void {
@@ -201,6 +224,8 @@ function viderResultats(): void {
   dernier = null;
   vue = null;
   zones.vues.innerHTML = '';
+  zones.sens.innerHTML = '';
+  zones.analyses.innerHTML = '';
   zones.verdicts.innerHTML = '';
   zones.volets.innerHTML = '';
   renduDessin();
@@ -285,15 +310,9 @@ document.addEventListener('click', (evenement) => {
     return recalculer();
   }
 
-  const indexVue = cible.dataset.vue;
-  if (indexVue !== undefined && dernier !== null) {
-    const v = vuesDisponibles(dernier.resultat)[Number(indexVue)];
-    if (v !== undefined) {
-      vue = v;
-      dessinerVues();
-      renduDessin();
-    }
-    return;
+  const axe = cible.dataset.axe;
+  if ((axe === 'combinaison' || axe === 'sens' || axe === 'analyse') && cible.dataset.valeur !== undefined) {
+    return choisirVue(axe, cible.dataset.valeur);
   }
 
   const action = cible.dataset.action;
