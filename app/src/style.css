@@ -637,3 +637,16 @@ svg .losange { fill: none; stroke: var(--compression); stroke-width: 1.5; }
 svg .ellipse-service { fill: none; stroke: var(--texte-doux); stroke-width: 1; stroke-dasharray: 4 3; }
 svg .alerte-dessin { fill: var(--refus); font-size: 12px; font-weight: 600; font-family: var(--sans); }
 
+
+/* --- Fondations superficielles : choix actif, cas gouvernant ------------ */
+
+.boutons button[aria-pressed='true'] {
+  background: var(--accent-doux);
+  border-color: var(--accent);
+  font-weight: 600;
+}
+
+tr.gouverne td {
+  background: var(--accent-doux);
+  font-weight: 600;
+}

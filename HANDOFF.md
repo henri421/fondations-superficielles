@@ -77,3 +77,26 @@
 - `vue.test` 119/119, `form.test` 24/24, `page.test` 12/12 : verts.
 - `typecheck.mjs .` : 0 erreur (TypeScript 6.0.3).
 - **Audit T3 et T4 (Claude)** : la largeur efficace en plan part de la largeur de calcul (Bd = B - 0,1 m en 2e génération sans dimensions contrôlées) avant de choisir entre B' et L'. Boutons du dessin refaits dans `main.ts` : trois rangées (combinaison, sens, analyse seulement en « Les deux »), libellés en clair au lieu du JSON brut, comparaison des vues par valeur (le bouton actif restait éteint), rangées déplacées dans la section Dessin, cotes cochées par défaut comme dans la maquette. Tests : 325 réussis, seuls les 34 de `anglais.test` (T5) échouent ; typage sans erreur.
+
+## T5 interface : version anglaise
+
+**Fichiers modifiés** : `app/en/index.html` (page complète, squelette identique à `app/index.html`), `app/src/textes.ts` (EN complété ; table `phrase` du noyau et messages de saisie), `app/src/form.ts` et `app/src/main.ts` (libellés et messages codés en dur déplacés dans `textes.ts`, voir ci-dessous). Rien d'autre : pas de logique modifiée, pas de dépendance, pas de commit.
+
+**Décisions**
+- Page EN : mêmes `id`, `data-*`, `type`, `inputmode`, `accept` et ordre que la page FR ; `html lang="en"` ; lien `barre-langue` vers `../`. Titre h1 « Shallow foundations ». Nom de l'élément par défaut « Footing » (cartouche), norme inchangée.
+- `phrase` (table noyau) : entrées exactes pour les messages du noyau (`terrain`, `tassement`, `portance`, `semelle`), règles regex pour les messages « doit être un nombre … » avec `NOMS` pour les noms de grandeurs, règle `^EN ` pour les sources de coefficients (tableau → table, jeu → set, valeur recommandée → recommended value, facteur de conséquence → consequence factor, sans coefficient → no factor), et « Format inconnu » de `relire`. Aucune valeur inventée : on traduit seulement.
+- **Déplacement permis (form.ts)** : les 7 messages et 2 libellés de `lireSaisie` étaient codés en dur en français. Ils sont maintenant `textes().messages.nombreAttendu / phiBornes / cuPositif / sigmaPPositif` et `textes().libelles.epaisseur / gammaBeton`, et le nom de couche vient de `textes().vue.entrees.symboleCouche(n)`. Les textes FR sont identiques au caractère près. Ajout d'un `import { textes } from './textes'`.
+- **Déplacement permis (main.ts)** : le message « Élément absent de la page » de `exige()` vient de `textes().messages.elementAbsent`. Une seule ligne changée.
+
+**Points douteux**
+- La méta description FR et EN parle d'« Eurocode 3 » (« Eurocode 7 et Eurocode 3 »), alors que l'outil ne traite que l'EN 1997 et l'EN 1990. Traduit tel quel ; à trancher côté FR avant de corriger les deux.
+- Les sources de coefficients sont traduites par règle mot à mot (`sourceEn`) et non par une table exhaustive : une nouvelle source avec un autre vocabulaire resterait en français sans que le test échoue si elle ne commence pas par « EN ».
+- `Textes` reste `typeof FR` : aucune clé EN manquante n'est détectée par le typage hors de la forme déjà existante ; la forme a été vérifiée à la main (même clés que FR).
+- Libellés de la saisie (`E_m`, `γ'`, `γsat`, `Dw`) gardés en symboles, identiques dans les deux langues.
+- Rendu visuel de la page EN non contrôlé dans le navigateur (le test vérifie le texte et le squelette, pas la mise en page).
+
+**Statut des tests**
+- `lancer.mjs . anglais.test` : 36/36 (le test du squelette, de la langue, des 36 saisies, de la note et des messages du noyau).
+- `lancer.mjs .` (suite complète) : 359 réussis, 0 échec (anglais 36, dessin 49, form 24, note 77, page 12, vue 119, audit 2, semelle 26, semelle2e 14).
+- `typecheck.mjs .` : 0 erreur (TypeScript 6.0.3).
+- **Audit T5 et contrôle visuel (Claude)** : description des pages corrigée (« Eurocode 3 » remplacé par l'EN 1990, que l'outil applique) ; ponctuation anglaise (`ponctuer` dans `textes.ts`, appliquée aux verdicts, aux volets, aux dessins et aux titres de la note) ; dans la coupe, T part du bord de la base vers l'extérieur et la cote de B s'écarte de la nappe ; bouton actif et ligne gouvernante mis en évidence (`style.css`) ; message du cas dégénéré avec majuscule. Contrôlé dans le navigateur : isolée, filante, 2e génération, résultante hors de la base, page anglaise ; ni NaN ni Infinity. Tests : 359 réussis, 0 échec ; typage sans erreur ; `tests/` et `src/` intacts.

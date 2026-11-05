@@ -11,7 +11,7 @@
 
 import { nombreAffiche, notationSvg } from 'aedificium-ui';
 import type { Calcul, Resultat } from './form';
-import { textes } from './textes';
+import { ponctuer, textes } from './textes';
 
 export interface Vue {
   combinaison: string;
@@ -53,7 +53,7 @@ const attr = (v: number): string => (Number.isFinite(v) ? String(Number(v.toFixe
 const nb = (v: number, decimales: number): string => nombreAffiche(fini(v), decimales);
 
 /** Tout texte de SVG. */
-const tx = (s: string): string => notationSvg(s);
+const tx = (s: string): string => notationSvg(ponctuer(s));
 
 const SENS: Vue['sens'][] = ['defavorable', 'favorable'];
 
@@ -222,21 +222,30 @@ export function coupe(calcul: Calcul, r: Resultat, vue: Vue, options: { cotes: b
     `<text class="force-traction" x="${attr(xN + 6)}" y="${attr(yTete + 12)}">${tx(`${t.effort} = ${nb(lec.N, 1)} kN`)}</text>`,
   );
 
+  // T part du bord de la base, vers l'exterieur, comme dans la maquette : son
+  // etiquette ne couvre ni la semelle ni le rectangle sur B'.
   const sens = lec.T >= 0 ? 1 : -1;
-  const lT = 0.45 * B * k;
+  const lT = Math.min(0.35 * B * k, 70);
+  const xT0 = sens > 0 ? X(B / 2) + 2 : X(-B / 2) - 2;
+  const xT1 = xT0 + sens * lT;
   out.push(
-    `<line class="effort-t" x1="${attr(cx - (sens * lT) / 2)}" y1="${attr(yBase)}" x2="${attr(cx + (sens * lT) / 2)}" y2="${attr(yBase)}" marker-end="url(#ml-tr)"/>`,
-    `<text class="force-traction" x="${attr(cx + (sens * lT) / 2 + sens * 6)}" y="${attr(yBase - 4)}" text-anchor="${sens > 0 ? 'start' : 'end'}">${tx(`${t.tranchant} = ${nb(lec.T, 1)} kN`)}</text>`,
+    `<line class="effort-t" x1="${attr(xT0)}" y1="${attr(yBase)}" x2="${attr(xT1)}" y2="${attr(yBase)}" marker-end="url(#ml-tr)"/>`,
+    `<text class="force-traction" x="${attr(xT1 + sens * 8)}" y="${attr(yBase + 4)}" text-anchor="${sens > 0 ? 'start' : 'end'}">${tx(`${t.tranchant} = ${nb(lec.T, 1)} kN`)}</text>`,
   );
 
   lec.messages.forEach((message, i) => {
-    out.push(`<text class="alerte-dessin" x="6" y="${attr(14 + i * 15)}">${tx(message)}</text>`);
+    out.push(`<text class="alerte-dessin" x="6" y="${attr(14 + i * 15)}">${tx(message.charAt(0).toUpperCase() + message.slice(1))}</text>`);
   });
 
   if (options.cotes) {
     const xD = X(-B / 2 - 0.3);
     const xE = X(B / 2 + 0.3);
-    const yCote = yE + hE + 18;
+    // La cote de B s'ecarte de la nappe pour que ligne et texte ne se croisent pas.
+    let yCote = yE + hE + 18;
+    if (dwAff !== null) {
+      const yN = Y(dwAff);
+      if (yN > yCote - 12 && yN < yCote + 20) yCote = yN + 14;
+    }
     out.push(
       `<line class="cote" x1="${attr(xD)}" y1="${attr(ySol)}" x2="${attr(xD)}" y2="${attr(yBase)}" ${TRAITS}/>`,
       `<text class="cote" x="${attr(xD - 6)}" y="${attr((ySol + yBase) / 2)}" text-anchor="end">${tx(`${t.coteD} = ${nb(D, 2)} m`)}</text>`,
@@ -297,7 +306,7 @@ export function planSvg(calcul: Calcul, r: Resultat, vue: Vue): string {
     );
   } else {
     lec.messages.forEach((message, i) => {
-      out.push(`<text class="alerte-dessin" x="6" y="${attr(14 + i * 15)}">${tx(message)}</text>`);
+      out.push(`<text class="alerte-dessin" x="6" y="${attr(14 + i * 15)}">${tx(message.charAt(0).toUpperCase() + message.slice(1))}</text>`);
     });
   }
 

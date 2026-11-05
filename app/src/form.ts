@@ -15,6 +15,7 @@ import {
   type Options2g,
   type ResultatSemelle,
 } from '../../src/index';
+import { textes } from './textes';
 
 export type Generation = '1re' | '2e';
 export type Forme = 'isolee' | 'filante';
@@ -133,7 +134,7 @@ class Refus extends Error {}
 /** Lit un nombre, ou refuse en nommant le champ. */
 function nb(brut: string, libelle: string): number {
   const v = lireNombre(brut);
-  if (v === null) throw new Refus(`${libelle} : nombre attendu, reçu « ${brut} »`);
+  if (v === null) throw new Refus(textes().messages.nombreAttendu(libelle, brut));
   return v;
 }
 
@@ -152,9 +153,9 @@ function tassementDe(s: Saisie): DonneesSemelle['tassement'] {
     s.couches.length === 0
       ? null
       : s.couches.map((couche, i) => {
-          const nom = `couche ${i + 1}`;
+          const nom = textes().vue.entrees.symboleCouche(i + 1);
           const sigmaP = nb(couche.sigmaP, `${nom}, σ'p`);
-          if (sigmaP <= 0) throw new Refus(`${nom}, σ'p : doit être strictement positif`);
+          if (sigmaP <= 0) throw new Refus(textes().messages.sigmaPPositif(nom));
           return {
             h: nb(couche.h, `${nom}, h`),
             gammaEff: nb(couche.gammaEff, `${nom}, γ'`),
@@ -178,8 +179,8 @@ export function lireSaisie(s: Saisie): Lecture {
     const B = nb(s.B, 'B');
     const L = filante ? null : nb(s.L, 'L');
     const D = nb(s.D, 'D');
-    const ep = nb(s.ep, 'Épaisseur de semelle');
-    const gammaBeton = nb(s.gammaBeton, 'γ béton');
+    const ep = nb(s.ep, textes().libelles.epaisseur);
+    const gammaBeton = nb(s.gammaBeton, textes().libelles.gammaBeton);
 
     const actions = {
       V_G: nb(s.VG, 'V_G'),
@@ -199,12 +200,12 @@ export function lireSaisie(s: Saisie): Lecture {
     let cu: number | null = null;
     if (s.comportement === 'draine' || s.comportement === 'les_deux') {
       phi = nb(s.phi, "φ'k");
-      if (!(phi > 0 && phi < 90)) throw new Refus("φ'k : doit être strictement compris entre 0 et 90°");
+      if (!(phi > 0 && phi < 90)) throw new Refus(textes().messages.phiBornes);
       c = nb(s.c, "c'k");
     }
     if (s.comportement === 'non_draine' || s.comportement === 'les_deux') {
       cu = nb(s.cu, 'c_u,k');
-      if (cu <= 0) throw new Refus('c_u,k : doit être strictement supérieur à 0');
+      if (cu <= 0) throw new Refus(textes().messages.cuPositif);
     }
 
     const sol = {

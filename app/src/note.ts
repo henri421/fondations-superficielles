@@ -10,7 +10,7 @@
 import { type ElementNote, type LigneResultat, type NoteDeCalcul, type VerificationNote, nombreAffiche } from 'aedificium-ui';
 import type { Calcul, Resultat } from './form';
 import { coupe, planSvg, vueGouvernante } from './dessin';
-import { phrase, textes } from './textes';
+import { phrase, ponctuer, textes } from './textes';
 import { blocEntrees, blocsResultat } from './vue';
 
 type Cas = Resultat['combinaisons'][number]['cas'][number];
@@ -100,11 +100,11 @@ function blocsCoefficients(r: Resultat): ElementNote[] {
       .flatMap(([g, coefs]) =>
         Object.entries(coefs as Record<string, Coefficient>).map(([k, co]) => ({
           symbole: SYM_COEF[k] ?? k,
-          libelle: `${groupes[g] ?? g} : ${phrase(co.source)}`,
+          libelle: ponctuer(`${groupes[g] ?? g} : ${phrase(co.source)}`),
           valeur: Number.isFinite(co.valeur) ? nombreAffiche(co.valeur, 2) : t.vue.nonCalculable,
         })),
       );
-    return bloc(`${t.note.coefficients} : ${phrase(c.nom)}`, lignes);
+    return bloc(ponctuer(`${t.note.coefficients} : ${phrase(c.nom)}`), lignes);
   });
 }
 
