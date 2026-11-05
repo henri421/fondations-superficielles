@@ -6,7 +6,7 @@
 
 import { type BlocResultat, nombreAffiche, notationHtml, tauxAffiche } from 'aedificium-ui';
 import type { Calcul, Resultat } from './form';
-import { phrase, textes } from './textes';
+import { phrase, ponctuer, textes } from './textes';
 
 type Cas = Resultat['combinaisons'][number]['cas'][number];
 type Analyse = 'drainee' | 'nonDrainee';
@@ -219,7 +219,7 @@ export function verdictsHtml(r: Resultat): string {
     ? `<p class="alerte">${t.alertes.plafond04}</p>`
     : '';
   const exc = g2 ? excentricite2(r) : excentricite1(r);
-  return (
+  return ponctuer(
     `<section class="groupe-verdicts" data-groupe="elu"><h2>${t.groupes.elu}</h2>${elu}${plafond}</section>` +
     `<section class="groupe-verdicts" data-groupe="excentricite"><h2>${t.groupes.excentricite}</h2>${exc}</section>` +
     groupeTassement(r)
@@ -353,7 +353,7 @@ export function voletsHtml(r: Resultat): string {
     )
     .join('');
 
-  return (
+  return ponctuer(
     `<details class="deriv" open><summary>${t.volets.elu}</summary>` +
     `<div class="defile"><table><thead><tr>` +
     `<th>${t.colonnes.combinaison}</th><th>${t.colonnes.sens}</th><th>${t.colonnes.analyse}</th>` +

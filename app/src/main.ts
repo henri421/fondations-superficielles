@@ -35,7 +35,7 @@ const CLE_CARTOUCHE = 'fondations-superficielles:cartouche';
 
 function exige<T extends Element>(selecteur: string): T {
   const e = document.querySelector<T>(selecteur);
-  if (e === null) throw new Error(`Élément absent de la page : ${selecteur}`);
+  if (e === null) throw new Error(textes().messages.elementAbsent(selecteur));
   return e;
 }
 

@@ -9,6 +9,15 @@ const FR = {
   messages: {
     rienAExporter: 'Aucun calcul valide à exporter : corriger la saisie.',
     nouvelleVersion: 'Une nouvelle version est disponible. Recharger maintenant ?',
+    nombreAttendu: (libelle: string, brut: string) => `${libelle} : nombre attendu, reçu « ${brut} »`,
+    phiBornes: "φ'k : doit être strictement compris entre 0 et 90°",
+    cuPositif: 'c_u,k : doit être strictement supérieur à 0',
+    sigmaPPositif: (nom: string) => `${nom}, σ'p : doit être strictement positif`,
+    elementAbsent: (selecteur: string) => `Élément absent de la page : ${selecteur}`,
+  },
+  libelles: {
+    epaisseur: 'Épaisseur de semelle',
+    gammaBeton: 'γ béton',
   },
   note: {
     element: 'Semelle',
@@ -192,6 +201,15 @@ const EN: Textes = {
   messages: {
     rienAExporter: 'No valid calculation to export: correct the input.',
     nouvelleVersion: 'A new version is available. Reload now?',
+    nombreAttendu: (libelle: string, brut: string) => `${libelle}: number expected, got “${brut}”.`,
+    phiBornes: "φ'k: must be strictly between 0 and 90°.",
+    cuPositif: 'c_u,k: must be strictly greater than 0.',
+    sigmaPPositif: (nom: string) => `${nom}, σ'p: must be strictly positive.`,
+    elementAbsent: (selecteur: string) => `Element missing from the page: ${selecteur}`,
+  },
+  libelles: {
+    epaisseur: 'Footing thickness',
+    gammaBeton: 'γ concrete',
   },
   note: {
     element: 'Footing',
@@ -373,5 +391,68 @@ export function textes(): Textes {
   return langueCourante() === 'en' ? EN : FR;
 }
 
-/** Traduit une phrase du noyau ; en francais, elle sort intacte. Les phrases du noyau restent a traduire (T5). */
-export const phrase = traducteur({}, []);
+/**
+ * Ponctuation de la langue courante : les assemblages « a : b » et « a ; b » portent
+ * l'espace francaise ; en anglais, les deux-points et le point-virgule se collent au mot.
+ */
+export function ponctuer(s: string): string {
+  return langueCourante() === 'en' ? s.replace(/ ([:;])(?=\s)/g, '$1') : s;
+}
+
+// --- Phrases du noyau : traduites en anglais seulement ; en francais, phrase() rend le texte intact --
+
+/** Noms de grandeurs des messages du noyau. */
+const NOMS: Record<string, string> = {
+  'La largeur B de la semelle': 'Footing width B',
+  'La longueur L de la semelle': 'Footing length L',
+  'La profondeur D de la base': 'Embedment depth D',
+  "L'épaisseur ep de la semelle": 'Footing thickness ep',
+  'La profondeur de la nappe Dw': 'Groundwater depth Dw',
+  'Le poids volumique gamma': 'Unit weight gamma',
+  'Le poids volumique saturé gammaSat': 'Saturated unit weight gammaSat',
+  'La cohésion': 'Cohesion',
+  'La cohésion non drainée cu': 'Undrained cohesion cu',
+  "Le module d'élasticité Em": 'Elastic modulus Em',
+  "L'épaisseur de couche h": 'Layer thickness h',
+  "L'indice des vides e0": 'Void ratio e0',
+  "L'indice de compression Cc": 'Compression index Cc',
+};
+
+const sansApostrophe = (s: string): string => s.replace(/’/g, "'");
+
+const nomEn = (nom: string): string => NOMS[nom] ?? NOMS[sansApostrophe(nom)] ?? nom;
+
+/** Unites en toutes lettres dans les phrases du noyau. */
+const unite = (u: string): string => (u === 'degrés' ? 'degrees' : u);
+
+/** Sources des coefficients (tableaux de l'EN 1997-1, EN 1990, EN 1997-3) : traduites mot a mot. */
+const sourceEn = (s: string): string =>
+  s
+    .replace(/valeur recommandée/g, 'recommended value')
+    .replace(/facteur de conséquence/g, 'consequence factor')
+    .replace(/tableau /g, 'table ')
+    .replace(/sans coefficient/g, 'no factor')
+    .replace(/, jeu /g, ', set ');
+
+const EXACTES: Record<string, string> = {
+  'Le coefficient de Poisson nu doit être compris entre 0 et 0,5 (-).': "Poisson's ratio nu must be between 0 and 0.5 (-).",
+  "L'angle de frottement phi doit être strictement positif et inférieur à pi/2 (rad).":
+    'The friction angle phi must be strictly positive and less than pi/2 (rad).',
+  'Ni phi ni cu ne sont saisis : aucune analyse de portance possible.': 'Neither phi nor cu is entered: no bearing analysis is possible.',
+  "L'épaisseur ep de la semelle ne peut pas dépasser la profondeur D (m).":
+    'The footing thickness ep cannot exceed the embedment depth D (m).',
+  'En semelle filante, les efforts H_L et M_L doivent être nuls (kN ou kN.m).':
+    'In a strip footing, the forces H_L and M_L must be zero (kN or kN·m).',
+  'La pression de préconsolidation sigmaP doit être un nombre strictement positif (kPa) : aucune valeur par défaut.':
+    'The preconsolidation pressure sigmaP must be a strictly positive number (kPa): no default value.',
+  "Les composantes de l'effort T doivent être des nombres finis (kN).": 'The components of the force T must be finite numbers (kN).',
+  "Profil : gRv (R1) n'a pas de source ; une valeur sans provenance bloque le calcul.":
+    'Profile: gRv (R1) has no source; a value without provenance blocks the calculation.',
+};
+
+export const phrase = traducteur(EXACTES, [
+  [/^Format inconnu : « (.*) » ; attendu (.+)$/, (_m, recu: string, attendu: string) => `Unknown format: “${recu}”; expected ${attendu}.`],
+  [/^(.+) doit être un nombre strictement positif \((.+)\)\.$/, (_m, nom: string, u: string) => `${nomEn(nom)} must be a strictly positive number (${unite(u)}).`],
+  [/^(.+) doit être un nombre positif ou nul \((.+)\)\.$/, (_m, nom: string, u: string) => `${nomEn(nom)} must be a non-negative number (${unite(u)}).`],
+  [/^(EN .*)$/, (_m, s: string) => sourceEn(s)],
+]);

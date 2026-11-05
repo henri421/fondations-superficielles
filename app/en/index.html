@@ -1,2 +1,349 @@
 <!doctype html>
-<html lang="en"></html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Shallow foundations — bearing, sliding, eccentricity and settlement, Eurocodes of both generations</title>
+    <meta
+      name="description"
+      content="Verification of a shallow foundation to Eurocode 7 and EN 1990, in both generations: bearing, sliding, eccentricity and settlement."
+    />
+    <meta name="theme-color" content="#f7f7f6" />
+  </head>
+  <body>
+    <div class="barre">
+      <div class="barre-corps">
+        <span class="barre-nom">webaedificium</span>
+        <div class="barre-actions">
+          <a class="barre-lien" href="https://henri421.github.io/WebAedificium/en/" target="_blank" rel="noopener">All tools</a>
+          <a class="barre-langue" href="../" lang="fr" hreflang="fr">FR</a>
+        </div>
+      </div>
+    </div>
+
+    <header>
+      <h1>Shallow foundations</h1>
+      <p class="sous-titre">
+        Bearing, sliding, eccentricity and settlement of a shallow foundation, Eurocodes of both generations.
+      </p>
+      <p class="avertissement">
+        The recommended values of the standards are used, in the absence of a Belgian national annex.
+        Check these values before any use on a real structure.
+      </p>
+    </header>
+
+    <main>
+      <section id="saisie" aria-label="Input">
+        <form id="formulaire" autocomplete="off" novalidate>
+          <div class="generations">
+            <button type="button" data-generation="1re" aria-pressed="true">1<sup>st</sup> generation</button>
+            <button type="button" data-generation="2e" aria-pressed="false">2<sup>nd</sup> generation</button>
+          </div>
+
+          <fieldset>
+            <legend>Footing</legend>
+            <div class="boutons">
+              <button type="button" data-forme="isolee" aria-pressed="true">Isolated</button>
+              <button type="button" data-forme="filante" aria-pressed="false">Strip</button>
+            </div>
+            <label>
+              <span>Width B (m)</span>
+              <input type="text" inputmode="decimal" data-champ="B" />
+            </label>
+            <label data-si-forme="isolee">
+              <span>Length L (m)</span>
+              <input type="text" inputmode="decimal" data-champ="L" />
+            </label>
+            <label>
+              <span>Depth of base D (m)</span>
+              <input type="text" inputmode="decimal" data-champ="D" />
+            </label>
+            <label>
+              <span>Footing thickness (m)</span>
+              <input type="text" inputmode="decimal" data-champ="ep" />
+            </label>
+            <label>
+              <span>Concrete unit weight γ<sub>concrete</sub> (kN/m³)</span>
+              <input type="text" inputmode="decimal" data-champ="gammaBeton" />
+            </label>
+            <p class="note">
+              For a strip footing, the L line disappears and everything is per metre. Thickness 0: the self-weight
+              of the footing and of the soil above it is already included in V.
+            </p>
+          </fieldset>
+
+          <fieldset>
+            <legend>Actions at the base</legend>
+            <div class="defilement">
+              <table class="actions-saisie">
+                <thead>
+                  <tr>
+                    <th scope="col">Action</th>
+                    <th scope="col" class="n">G</th>
+                    <th scope="col" class="n">Q</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>V (kN)</td>
+                    <td><input type="text" inputmode="decimal" data-champ="VG" aria-label="Permanent V" /></td>
+                    <td><input type="text" inputmode="decimal" data-champ="VQ" aria-label="Variable V" /></td>
+                  </tr>
+                  <tr>
+                    <td>H along B (kN)</td>
+                    <td><input type="text" inputmode="decimal" data-champ="HBG" aria-label="H along B, permanent" /></td>
+                    <td><input type="text" inputmode="decimal" data-champ="HBQ" aria-label="H along B, variable" /></td>
+                  </tr>
+                  <tr>
+                    <td>M along B (kN·m)</td>
+                    <td><input type="text" inputmode="decimal" data-champ="MBG" aria-label="M along B, permanent" /></td>
+                    <td><input type="text" inputmode="decimal" data-champ="MBQ" aria-label="M along B, variable" /></td>
+                  </tr>
+                  <tr data-si-forme="isolee">
+                    <td>H along L (kN)</td>
+                    <td><input type="text" inputmode="decimal" data-champ="HLG" aria-label="H along L, permanent" /></td>
+                    <td><input type="text" inputmode="decimal" data-champ="HLQ" aria-label="H along L, variable" /></td>
+                  </tr>
+                  <tr data-si-forme="isolee">
+                    <td>M along L (kN·m)</td>
+                    <td><input type="text" inputmode="decimal" data-champ="MLG" aria-label="M along L, permanent" /></td>
+                    <td><input type="text" inputmode="decimal" data-champ="MLQ" aria-label="M along L, variable" /></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="note">
+              M along B shifts the load in the direction of B, M along L in the direction of L.
+              The two "along L" rows disappear for a strip footing.
+            </p>
+          </fieldset>
+
+          <fieldset>
+            <legend>Soil below the base</legend>
+            <div class="boutons">
+              <button type="button" data-comportement="draine" aria-pressed="true">Drained</button>
+              <button type="button" data-comportement="non_draine" aria-pressed="false">Undrained</button>
+              <button type="button" data-comportement="les_deux" aria-pressed="false">Both</button>
+            </div>
+            <label data-si-sol="drainee">
+              <span>Internal friction angle φ’<sub>k</sub> (°)</span>
+              <input type="text" inputmode="decimal" data-champ="phi" />
+            </label>
+            <label data-si-sol="drainee">
+              <span>Cohesion c’<sub>k</sub> (kPa)</span>
+              <input type="text" inputmode="decimal" data-champ="c" />
+            </label>
+            <label data-si-sol="non-drainee">
+              <span>Undrained shear strength c<sub>u,k</sub> (kPa)</span>
+              <input type="text" inputmode="decimal" data-champ="cu" />
+            </label>
+            <label class="case" data-si-sol="non-drainee">
+              <input type="checkbox" data-champ="eauInterface" />
+              <span>Water or air can reach the interface</span>
+            </label>
+            <label>
+              <span>Unit weight γ (kN/m³)</span>
+              <input type="text" inputmode="decimal" data-champ="gamma" />
+            </label>
+            <label>
+              <span>Saturated unit weight γ<sub>sat</sub> (kN/m³)</span>
+              <input type="text" inputmode="decimal" data-champ="gammaSat" />
+            </label>
+            <label class="case">
+              <input type="checkbox" data-champ="baseRugueuse" />
+              <span>Rough base, concrete cast in place</span>
+            </label>
+            <div class="sous-titre">Groundwater</div>
+            <label class="case">
+              <input type="checkbox" data-champ="avecNappe" />
+              <span>Groundwater to be taken into account</span>
+            </label>
+            <label data-si-nappe>
+              <span>Depth D<sub>w</sub> (m)</span>
+              <input type="text" inputmode="decimal" data-champ="Dw" />
+            </label>
+            <p class="note">
+              "Undrained" replaces φ’<sub>k</sub> and c’<sub>k</sub> with c<sub>u,k</sub> and shows the box
+              "Water or air can reach the interface", ticked by default.
+              That choice avoids a false refusal on a sand. There is one soil only here; the layers are used
+              only for settlement.
+            </p>
+          </fieldset>
+
+          <fieldset>
+            <legend>Generation and approach</legend>
+            <div class="groupe" data-groupe="1re">
+              <label>
+                <span>Design approach</span>
+                <select data-champ="approche1">
+                  <option value="DA1">DA1 (combinations 1 and 2)</option>
+                  <option value="DA2">DA2</option>
+                  <option value="DA3">DA3</option>
+                </select>
+              </label>
+            </div>
+            <div class="groupe" data-groupe="2e">
+              <label>
+                <span>Approach combination</span>
+                <select data-champ="approche2">
+                  <option value="a+b">a + b</option>
+                  <option value="c">c</option>
+                  <option value="d">d</option>
+                </select>
+              </label>
+              <label>
+                <span>Consequence class</span>
+                <select data-champ="consequences">
+                  <option value="CC1">CC1</option>
+                  <option value="CC2">CC2</option>
+                  <option value="CC3">CC3</option>
+                </select>
+              </label>
+              <label class="case">
+                <input type="checkbox" data-champ="dimensionsControlees" />
+                <span>Dimensions controlled</span>
+              </label>
+              <label class="case">
+                <input type="checkbox" data-champ="profondeurComptee" />
+                <span>Count the depth factor</span>
+              </label>
+            </div>
+            <p class="note">
+              Switching generation keeps the data. The 1<sup>st</sup> generation offers DA1, DA2 and DA3.
+              The 2<sup>nd</sup> generation offers (a) + (b), (c) or (d), consequence class CC2 by default,
+              and two boxes, "Dimensions controlled" and "Count the depth factor".
+            </p>
+          </fieldset>
+
+          <details class="volet">
+            <summary>Settlement (optional)</summary>
+            <div>
+              <label class="case">
+                <input type="checkbox" data-champ="avecTassement" />
+                <span>Calculate settlement</span>
+              </label>
+              <label class="case">
+                <input type="checkbox" data-champ="pNette" />
+                <span>Net pressure (p − q)</span>
+              </label>
+              <div class="sous-titre">Elastic method</div>
+              <label class="case">
+                <input type="checkbox" data-champ="avecElastique" />
+                <span>Calculate by the elastic method</span>
+              </label>
+              <label>
+                <span>Modulus E<sub>m</sub> (MPa)</span>
+                <input type="text" inputmode="decimal" data-champ="Em" />
+              </label>
+              <label>
+                <span>Poisson's ratio ν</span>
+                <input type="text" inputmode="decimal" data-champ="nu" />
+              </label>
+              <label>
+                <span>Footing stiffness</span>
+                <select data-champ="raideur">
+                  <option value="rigide">Rigid</option>
+                  <option value="souple">Flexible</option>
+                </select>
+              </label>
+              <div class="sous-titre">Compressible layers, below the base</div>
+              <div class="defilement">
+                <table class="couches">
+                  <thead>
+                    <tr>
+                      <th scope="col">h (m)</th>
+                      <th scope="col">γ’ (kN/m³)</th>
+                      <th scope="col">C<sub>c</sub></th>
+                      <th scope="col">C<sub>s</sub></th>
+                      <th scope="col">e<sub>0</sub></th>
+                      <th scope="col">σ’<sub>p</sub> (kPa)</th>
+                      <th scope="col"><span class="clause">Remove</span></th>
+                    </tr>
+                  </thead>
+                  <tbody data-role="couches"></tbody>
+                </table>
+              </div>
+              <div class="boutons">
+                <button type="button" data-action="ajouter-couche">Add a layer</button>
+              </div>
+              <p class="note">
+                σ’<sub>p</sub> is mandatory: the tool refuses rather than inventing a value.
+                The panel is folded and empty by default.
+              </p>
+            </div>
+          </details>
+
+          <fieldset>
+            <legend>Out of scope</legend>
+            <p class="note">
+              This tool does not cover circular footings, an inclined base or ground, a weak layer below the base,
+              UPL uplift, passive resistance on the front and overall stability. The national annex is not taken
+              into account.
+            </p>
+          </fieldset>
+
+          <p class="avertissement">
+            Without a national annex, the recommended values of the standards are used.
+          </p>
+        </form>
+      </section>
+
+      <div class="colonne">
+        <section id="sorties" aria-label="Results">
+          <h2>Results</h2>
+          <p class="erreur" data-role="erreur" hidden></p>
+          <div data-role="verdicts"></div>
+          <div data-role="volets"></div>
+        </section>
+
+        <section aria-label="Drawing">
+          <h2>Drawing</h2>
+          <p class="note">Forces shown: the governing case opens first.</p>
+          <div class="boutons" data-role="vues"></div>
+          <div class="boutons" data-role="sens"></div>
+          <div class="boutons" data-role="analyses"></div>
+          <div class="boutons">
+            <label class="case">
+              <input type="checkbox" data-option="cotes" checked />
+              <span>Dimensions</span>
+            </label>
+          </div>
+          <div data-role="coupe"></div>
+          <div data-role="plan"></div>
+        </section>
+
+        <section aria-label="Exports">
+          <h2>Exports</h2>
+          <label>
+            <span>Project</span>
+            <input type="text" data-role="projet" />
+          </label>
+          <label>
+            <span>Element</span>
+            <input type="text" data-role="element" />
+          </label>
+          <div class="boutons">
+            <button type="button" data-action="exporter-note">Calculation note</button>
+            <button type="button" data-action="exporter-coupe">Section SVG</button>
+            <button type="button" data-action="exporter-resultats">Results CSV</button>
+            <button type="button" data-action="enregistrer">Save input</button>
+            <button type="button" data-action="reinitialiser">Reset</button>
+          </div>
+          <label>
+            <span>Open a saved input</span>
+            <input type="file" data-role="ouvrir" accept=".json,application/json" />
+          </label>
+          <p class="note">
+            The input is kept in this browser. Opened files are read locally, without being sent over the network.
+          </p>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      <p>Shallow foundations · local verification tool · Eurocode 7.</p>
+    </footer>
+
+    <script type="module" src="../src/main.ts"></script>
+  </body>
+</html>
