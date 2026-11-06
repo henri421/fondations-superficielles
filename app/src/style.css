@@ -650,3 +650,8 @@ tr.gouverne td {
   background: var(--accent-doux);
   font-weight: 600;
 }
+
+/* --- Jauges : le balisage commun ecrit <i>, pas <div> ------------------- */
+.jauge > i { display: block; height: 100%; background: var(--ok); }
+.verdict.depasse .jauge > i { background: var(--refus); }
+.verdict p { font-size: 0.9rem; margin: 0.25rem 0; }
