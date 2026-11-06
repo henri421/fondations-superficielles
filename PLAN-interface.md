@@ -62,8 +62,8 @@ plan 253 à 277, volets 280 à 326, verdicts 329 à 350.
 | T3 | `dessin.ts` | la maquette | `dessin.test` | T1 | exécutant, contrôle visuel par Claude |
 | T4 | `note.ts`, `export.ts` | `mur-en-l/app/src/note.ts`, `export.ts` | `note.test` | T2, T3 | exécutant |
 | T5 | `app/en/index.html`, `textes.ts` | `mur-en-l/app/en/index.html` | `anglais.test` | T4 | exécutant |
-| T6 | icônes, README, lock, publication | | | T5 | Claude et l'utilisateur |
-| T7 | carte et menu du hub, bandeau « non audité » de Fondbis avec les deux erreurs de portance | | | T6 | Claude |
+| T6 | icônes, README, lock, publication | | | T5 | local fait (5f8daf2, c852b41) ; publication en attente des dépôts |
+| T7 | carte et menu du hub, bandeau « non audité » de Fondbis avec les deux erreurs de portance | | | T6 | local fait (hub 8173eb2, Fondbis 31086ee), non poussé |
 
 `app/src/style.css` et `pwa.ts` sont déjà copiés du mur : n'ajouter à la fin de `style.css` que les règles manquantes.
 `page.test` lit `main.ts` tel qu'il sera à la fin : ses tests « main.ts » ne passent qu'après T4. Pour T6, l'utilisateur crée les
@@ -96,3 +96,13 @@ Un lancement par tâche, consigne nommant les fichiers et les lignes de la maque
 
 Modifier `src/`, `tests/`, `sol-ec7`, `mur-en-l`, `_banc-local` ; calculer dans `app/` ; ajouter une dépendance ; `git push`, `git tag`.
 Pas de fond noir ni d'interface façon tableur. Si un test paraît faux, s'arrêter sur cette tâche et le signaler dans `HANDOFF.md`.
+
+## Publication (à faire dans cet ordre)
+
+1. L'utilisateur crée, vides et publics, `henri421/sol-ec7` et `henri421/fondations-superficielles`.
+2. `sol-ec7` : ajouter le dépôt distant, pousser `main` puis le tag `v0.1.0` (déjà posé en local sur b1d5d28 ;
+   le lock de l'outil pointe sur ce commit).
+3. `fondations-superficielles` : pousser `main` ; l'utilisateur active Pages (source GitHub Actions) ; le
+   workflow `pages.yml` vérifie, construit et publie.
+4. Une fois la page en ligne : pousser le hub (8173eb2) et Fondbis (31086ee), puis lancer à la main le
+   workflow de publication de Fondbis.
