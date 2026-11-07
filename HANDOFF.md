@@ -100,3 +100,22 @@
 - `lancer.mjs .` (suite complète) : 359 réussis, 0 échec (anglais 36, dessin 49, form 24, note 77, page 12, vue 119, audit 2, semelle 26, semelle2e 14).
 - `typecheck.mjs .` : 0 erreur (TypeScript 6.0.3).
 - **Audit T5 et contrôle visuel (Claude)** : description des pages corrigée (« Eurocode 3 » remplacé par l'EN 1990, que l'outil applique) ; ponctuation anglaise (`ponctuer` dans `textes.ts`, appliquée aux verdicts, aux volets, aux dessins et aux titres de la note) ; dans la coupe, T part du bord de la base vers l'extérieur et la cote de B s'écarte de la nappe ; bouton actif et ligne gouvernante mis en évidence (`style.css`) ; message du cas dégénéré avec majuscule. Contrôlé dans le navigateur : isolée, filante, 2e génération, résultante hors de la base, page anglaise ; ni NaN ni Infinity. Tests : 359 réussis, 0 échec ; typage sans erreur ; `tests/` et `src/` intacts.
+
+## Lot 9.5 — feuilles
+
+**Fichiers modifiés** (non commités, Claude audite et commite) :
+- `app/index.html` et `app/en/index.html` : `<div class="feuilles" data-role="feuilles"></div>` après `</header>`.
+- `app/src/style.css` : `.feuilles` ajouté à la règle `header, main, footer` ; bloc `.feuilles` / `.feuilles:empty` en fin de fichier.
+- `app/src/main.ts` : import `brancherFeuilles`, `type BarreFeuilles`, `type Json` ; `let barre` après `let saisie` ; `recalculer()` remplace `memoriser()` par la branche `barre?.dansUnProjet()` ; `brancherFeuilles({...})` juste avant les appels de démarrage, `app: 'fondations-superficielles'`, `lire` et `charger` comme dans le lot (`charger` appelle `ecrireSaisie(); recalculer();`).
+
+**Décisions** :
+- `nomApp` pris dans `exige<HTMLElement>('header h1')`, avec repli sur l'identifiant si le texte est vide.
+- Pas de `libelle` ni `marquer` (interdits par le lot).
+
+**Points douteux** :
+- `charger` appelle `recalculer()`, qui appelle `barre.signaler()` quand l'app est dans un projet. Le lot ne dit pas si `signaler` peut re-déclencher `charger` ; à vérifier à l'audit.
+- Pas de test de l'état « dans un projet » au-delà des 6 tests de `feuilles.test.ts`.
+
+**Tests** :
+- `ELECTRON_RUN_AS_NODE=1 ".../Code.exe" _banc-local/lancer.mjs fondations-superficielles` : 365 réussis, 0 échec. `tests/app/feuilles.test.ts` 6/6.
+- `ELECTRON_RUN_AS_NODE=1 ".../Code.exe" _banc-local/typecheck.mjs fondations-superficielles` : 0 erreur (TypeScript 6.0.3).
