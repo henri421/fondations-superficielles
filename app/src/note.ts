@@ -12,6 +12,7 @@ import type { Calcul, Resultat } from './form';
 import { coupe, planSvg, vueGouvernante } from './dessin';
 import { phrase, ponctuer, textes } from './textes';
 import { blocEntrees, blocsResultat } from './vue';
+import { VERSION_OUTIL } from './version';
 
 type Cas = Resultat['combinaisons'][number]['cas'][number];
 type Analyse = 'drainee' | 'nonDrainee';
@@ -154,6 +155,7 @@ export function noteDuCalcul(
 
   return {
     cartouche: {
+      version: VERSION_OUTIL,
       projet: cartouche.projet,
       element: cartouche.element.trim() === '' ? n.element : cartouche.element,
       date: cartouche.date,
