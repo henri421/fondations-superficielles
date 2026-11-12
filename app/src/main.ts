@@ -7,6 +7,7 @@
  */
 
 import {
+  avertissement2eGeneration,
   blocsEnTexte,
   brancherFeuilles,
   definirLangue,
@@ -157,6 +158,11 @@ function ajusterAffichage(): void {
   }
   for (const b of formulairesBoutons('[data-generation]')) {
     b.setAttribute('aria-pressed', String(b.dataset.generation === saisie.generation));
+  }
+  const bandeau = document.querySelector<HTMLElement>('[data-role="bandeau-2e-gen"]');
+  if (bandeau !== null) {
+    bandeau.hidden = saisie.generation !== '2e';
+    bandeau.textContent = avertissement2eGeneration();
   }
   for (const g of formulaire.querySelectorAll<HTMLElement>('[data-groupe]')) {
     g.hidden = g.dataset.groupe !== saisie.generation;

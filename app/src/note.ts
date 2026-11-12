@@ -7,7 +7,7 @@
  * e/(B/3) que la carte de l'ecran presente deja.
  */
 
-import { type ElementNote, type LigneResultat, type NoteDeCalcul, type VerificationNote, nombreAffiche } from 'aedificium-ui';
+import { avertissement2eGeneration, type ElementNote, type LigneResultat, type NoteDeCalcul, type VerificationNote, nombreAffiche } from 'aedificium-ui';
 import type { Calcul, Resultat } from './form';
 import { coupe, planSvg, vueGouvernante } from './dessin';
 import { phrase, ponctuer, textes } from './textes';
@@ -148,7 +148,10 @@ export function noteDuCalcul(
     els_permanentes: n.alertes.elsPermanentes,
     els_totales: n.alertes.elsTotales,
   };
-  const avertissements = r.alertes.map((a) => alertes[a] ?? phrase(a));
+  const avertissements = [
+    ...(r.generation === '2e' ? [avertissement2eGeneration()] : []),
+    ...r.alertes.map((a) => alertes[a] ?? phrase(a)),
+  ];
   if (r.combinaisons.some((c) => c.cas.some((x) => x.nonDrainee?.glissement.limite04))) {
     avertissements.push(t.vue.alertes.plafond04);
   }
