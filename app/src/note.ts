@@ -7,7 +7,7 @@
  * e/(B/3) que la carte de l'ecran presente deja.
  */
 
-import { avertissement2eGeneration, type ElementNote, type LigneResultat, type NoteDeCalcul, type VerificationNote, nombreAffiche } from 'aedificium-ui';
+import { avertissement2eGeneration, avertissementAnnexeLu, type ElementNote, type LigneResultat, type NoteDeCalcul, type VerificationNote, nombreAffiche } from 'aedificium-ui';
 import type { Calcul, Resultat } from './form';
 import { coupe, planSvg, vueGouvernante } from './dessin';
 import { phrase, ponctuer, textes } from './textes';
@@ -27,6 +27,14 @@ const NORMES: Record<Resultat['generation'], string> = {
   '1re': 'EN 1997-1:2004',
   '2e': 'EN 1997-1:2024, EN 1997-3:2025, EN 1990:2023',
 };
+
+/** Norme du cartouche : la 1re generation nomme l'annexe nationale retenue (lot E). */
+function normeDe(calcul: Calcul): string {
+  if (calcul.generation === '2e') return NORMES['2e'];
+  if (calcul.profilNormatif === 'lu') return 'EN 1997-1:2004, ILNAS-EN 1997-1/AN-LU:2020';
+  if (calcul.profilNormatif === 'anb2022') return 'EN 1997-1:2004, NBN EN 1997-1 ANB:2022';
+  return NORMES['1re'];
+}
 
 /** Symboles des coefficients rendus par le noyau ; une cle inconnue s'affiche telle quelle. */
 const SYM_COEF: Record<string, string> = {
@@ -150,6 +158,7 @@ export function noteDuCalcul(
   };
   const avertissements = [
     ...(r.generation === '2e' ? [avertissement2eGeneration()] : []),
+    ...(calcul.generation === '1re' && calcul.profilNormatif === 'lu' && avertissementAnnexeLu() !== '' ? [avertissementAnnexeLu()] : []),
     ...r.alertes.map((a) => alertes[a] ?? phrase(a)),
   ];
   if (r.combinaisons.some((c) => c.cas.some((x) => x.nonDrainee?.glissement.limite04))) {
@@ -162,7 +171,7 @@ export function noteDuCalcul(
       projet: cartouche.projet,
       element: cartouche.element.trim() === '' ? n.element : cartouche.element,
       date: cartouche.date,
-      norme: NORMES[r.generation],
+      norme: normeDe(calcul),
       outil: 'fondations-superficielles',
     },
     sections: {

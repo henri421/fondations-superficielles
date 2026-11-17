@@ -28,7 +28,7 @@ const FR = {
     legendeCoupe: 'Coupe cotée du cas gouvernant : terrain, nappe, semelle, résultante et rectangle sur B′.',
     legendePlan: 'Plan du cas gouvernant : surface efficace, point d’application, losange et ellipse de service.',
     recommandations1re: [
-      'Valeurs recommandées : approche DA1 (combinaisons 1 et 2) par défaut ; DA2 et DA3 disponibles.',
+      'Coefficients : valeurs recommandées (approche DA1 par défaut ; DA2 et DA3 disponibles), NBN EN 1997-1 ANB:2022 (DA1 imposée) ou Luxembourg AN-LU:2020 (valeurs présumées, à vérifier).',
       'Coefficients partiels : ceux de chaque combinaison, avec leur source dans le volet dédié.',
     ],
     recommandations2e: [
@@ -42,9 +42,9 @@ const FR = {
       elsPermanentes: 'Excentricité sous actions permanentes au-delà de la limite de service.',
       elsTotales: 'Excentricité sous actions totales au-delà de la limite de service.',
     },
-    mention: 'Aucune annexe nationale n’est appliquée : les valeurs recommandées des Eurocodes sont retenues.',
+    mention: 'Coefficients de la 1re génération : profil indiqué dans les entrées. En 2e génération, aucune annexe nationale n’est appliquée : les valeurs recommandées des Eurocodes sont retenues.',
     horsPerimetre:
-      'Hors périmètre : fondation circulaire, base ou terrain inclinés, couche faible sous la base, soulèvement UPL, butée sur le front, stabilité générale, annexe nationale.',
+      'Hors périmètre : fondation circulaire, base ou terrain inclinés, couche faible sous la base, soulèvement UPL, butée sur le front, stabilité générale, annexe nationale de la 2e génération.',
   },
   vue: {
     entrees: {
@@ -53,6 +53,8 @@ const FR = {
       symboleGeneration: 'génération',
       approche: 'Approche',
       symboleApproche: 'approche',
+      profil: 'Coefficients partiels',
+      symboleProfil: 'profil',
       classe: 'Classe de conséquences',
       symboleClasse: 'classe',
       dimensions: 'Dimensions contrôlées',
@@ -92,6 +94,11 @@ const FR = {
       aucune: 'aucune',
     },
     generations: { '1re': '1re génération', '2e': '2e génération' },
+    profils: {
+      recommande: 'valeurs recommandées',
+      anb2022: 'NBN EN 1997-1 ANB:2022 (DA1)',
+      lu: 'Luxembourg, AN-LU:2020 (à vérifier)',
+    },
     approches2e: { 'a+b': '(a) + (b)', c: '(c)', d: '(d)' },
     groupes: { elu: 'États limites ultimes', excentricite: 'Excentricité', tassement: 'Tassement' },
     groupesCoef: { geotechnique: 'Géotechnique', structure: 'Structure', sol: 'Sol', resistance: 'Résistance' },
@@ -220,7 +227,7 @@ const EN: Textes = {
     legendeCoupe: 'Dimensioned section of the governing case: ground, water table, footing, resultant and rectangle on B′.',
     legendePlan: 'Plan of the governing case: effective area, point of application, service diamond and service ellipse.',
     recommandations1re: [
-      'Recommended values: design approach DA1 (combinations 1 and 2) by default; DA2 and DA3 available.',
+      'Factors: recommended values (design approach DA1 by default; DA2 and DA3 available), NBN EN 1997-1 ANB:2022 (DA1 imposed) or Luxembourg AN-LU:2020 (presumed values, to be checked).',
       'Partial factors: those of each combination, with their source in the dedicated panel.',
     ],
     recommandations2e: [
@@ -234,9 +241,9 @@ const EN: Textes = {
       elsPermanentes: 'Eccentricity under permanent actions beyond the serviceability limit.',
       elsTotales: 'Eccentricity under total actions beyond the serviceability limit.',
     },
-    mention: 'No national annex is applied: the recommended values of the Eurocodes are used.',
+    mention: '1st generation factors: profile given in the input data. In the 2nd generation, no national annex is applied: the recommended values of the Eurocodes are used.',
     horsPerimetre:
-      'Out of scope: circular footing, inclined base or ground, weak layer below the base, UPL uplift, passive resistance on the front, overall stability, national annex.',
+      'Out of scope: circular footing, inclined base or ground, weak layer below the base, UPL uplift, passive resistance on the front, overall stability, 2nd generation national annex.',
   },
   vue: {
     entrees: {
@@ -245,6 +252,8 @@ const EN: Textes = {
       symboleGeneration: 'generation',
       approche: 'Approach',
       symboleApproche: 'approach',
+      profil: 'Partial factors',
+      symboleProfil: 'profile',
       classe: 'Consequence class',
       symboleClasse: 'class',
       dimensions: 'Dimensions controlled',
@@ -284,6 +293,11 @@ const EN: Textes = {
       aucune: 'none',
     },
     generations: { '1re': '1st generation', '2e': '2nd generation' },
+    profils: {
+      recommande: 'recommended values',
+      anb2022: 'NBN EN 1997-1 ANB:2022 (DA1)',
+      lu: 'Luxembourg, AN-LU:2020 (to be checked)',
+    },
     approches2e: { 'a+b': '(a) + (b)', c: '(c)', d: '(d)' },
     groupes: { elu: 'Ultimate limit states', excentricite: 'Eccentricity', tassement: 'Settlement' },
     groupesCoef: { geotechnique: 'Geotechnical', structure: 'Structural', sol: 'Soil', resistance: 'Resistance' },

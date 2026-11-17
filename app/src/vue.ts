@@ -383,6 +383,7 @@ export function blocEntrees(calcul: Calcul): BlocResultat {
 
   ligne(e.symboleGeneration, e.generation, t.generations[calcul.generation]);
   if (calcul.generation === '1re') {
+    ligne(e.symboleProfil, e.profil, t.profils[calcul.profilNormatif]);
     ligne(e.symboleApproche, e.approche, calcul.approche);
   } else {
     const o = calcul.options;

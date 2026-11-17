@@ -29,7 +29,8 @@
         Bearing, sliding, eccentricity and settlement of a shallow foundation, Eurocodes of both generations.
       </p>
       <p class="avertissement">
-        The recommended values of the standards are used, in the absence of a Belgian national annex.
+        In the 1st generation, the factors follow the chosen profile: recommended values, Belgian ANB 2022 or
+        Luxembourg annex (presumed values, to be checked); in the 2nd generation, the recommended values.
         Check these values before any use on a real structure.
       </p>
     </header>
@@ -180,6 +181,27 @@
             <legend>Generation and approach</legend>
             <div class="groupe" data-groupe="1re">
               <label>
+                <span>Factors</span>
+                <select data-champ="profilNormatif">
+                  <option value="recommande">Recommended values</option>
+                  <option value="anb2022">NBN EN 1997-1 ANB:2022</option>
+                  <option value="lu">Luxembourg (AN-LU:2020, to be checked)</option>
+                </select>
+              </label>
+              <div data-si-profil="anb2022">
+                <label>
+                  <span>Risk (ANB)</span>
+                  <select data-champ="risque">
+                    <option value="faible">Low</option>
+                    <option value="normal">Normal</option>
+                    <option value="eleve">High</option>
+                  </select>
+                </label>
+              </div>
+              <p class="avertissement" data-role="bandeau-annexe" hidden></p>
+            </div>
+            <div class="groupe" data-groupe="1re">
+              <label>
                 <span>Design approach</span>
                 <select data-champ="approche1">
                   <option value="DA1">DA1 (combinations 1 and 2)</option>
@@ -283,13 +305,13 @@
             <legend>Out of scope</legend>
             <p class="note">
               This tool does not cover circular footings, an inclined base or ground, a weak layer below the base,
-              UPL uplift, passive resistance on the front and overall stability. The national annex is not taken
-              into account.
+              UPL uplift, passive resistance on the front and overall stability. In the 2nd generation, the national annex
+              is not taken into account.
             </p>
           </fieldset>
 
           <p class="avertissement">
-            Without a national annex, the recommended values of the standards are used.
+            In the 2nd generation, without a national annex, the recommended values of the standards are used.
           </p>
         </form>
       </section>

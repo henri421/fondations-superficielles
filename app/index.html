@@ -29,7 +29,8 @@
         Portance, glissement, excentricité et tassement d’une semelle superficielle, Eurocodes des deux générations.
       </p>
       <p class="avertissement">
-        Les valeurs recommandées des normes sont utilisées, faute d’annexe nationale belge.
+        En 1re génération, les coefficients suivent le profil choisi : valeurs recommandées, ANB belge 2022 ou
+        annexe luxembourgeoise (valeurs présumées, à vérifier) ; en 2e génération, les valeurs recommandées.
         Vérifier ces valeurs avant tout usage sur un ouvrage réel.
       </p>
     </header>
@@ -179,6 +180,27 @@
             <legend>Génération et approche</legend>
             <div class="groupe" data-groupe="1re">
               <label>
+                <span>Coefficients</span>
+                <select data-champ="profilNormatif">
+                  <option value="recommande">Valeurs recommandées</option>
+                  <option value="anb2022">NBN EN 1997-1 ANB:2022</option>
+                  <option value="lu">Luxembourg (AN-LU:2020, à vérifier)</option>
+                </select>
+              </label>
+              <div data-si-profil="anb2022">
+                <label>
+                  <span>Risque (ANB)</span>
+                  <select data-champ="risque">
+                    <option value="faible">Faible</option>
+                    <option value="normal">Normal</option>
+                    <option value="eleve">Élevé</option>
+                  </select>
+                </label>
+              </div>
+              <p class="avertissement" data-role="bandeau-annexe" hidden></p>
+            </div>
+            <div class="groupe" data-groupe="1re">
+              <label>
                 <span>Approche de calcul</span>
                 <select data-champ="approche1">
                   <option value="DA1">DA1 (combinaisons 1 et 2)</option>
@@ -283,12 +305,12 @@
             <p class="note">
               Ne sont pas traités par cet outil la fondation circulaire, la base ou le terrain inclinés,
               la couche faible sous la base, le soulèvement UPL, la butée sur le front et la stabilité
-              générale. L’annexe nationale n’est pas prise en compte.
+              générale. En 2e génération, l’annexe nationale n’est pas prise en compte.
             </p>
           </fieldset>
 
           <p class="avertissement">
-            Sans annexe nationale, les valeurs recommandées des normes sont retenues.
+            En 2e génération, sans annexe nationale, les valeurs recommandées des normes sont retenues.
           </p>
         </form>
       </section>

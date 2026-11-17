@@ -7,7 +7,17 @@
  */
 
 import { lireNombre } from 'aedificium-ui';
-import { combinaisons1g, combinaisons2g, profil1g, profil2g, type Approche, type Combinaison, type ClasseConsequences } from 'sol-ec7';
+import { combinaisons1g, combinaisons2g, profil1g, profil2g, profilAnb2022, type Approche, type Combinaison, type ClasseConsequences, type Profil1g, type Risque } from 'sol-ec7';
+import { profilLu1g } from './annexe';
+
+/** Profil de coefficients de la 1re generation (lot E) : recommande, ANB 2022 (DA1 imposee) ou Luxembourg. */
+export type ProfilNormatif = 'recommande' | 'anb2022' | 'lu';
+
+export function profil1gDe(profil: ProfilNormatif, risque: Risque): Profil1g {
+  if (profil === 'anb2022') return profilAnb2022(risque);
+  if (profil === 'lu') return profilLu1g();
+  return profil1g();
+}
 import {
   verifierSemelle1g,
   verifierSemelle2g,
@@ -34,6 +44,8 @@ export interface CoucheSaisie {
 export interface Saisie {
   generation: Generation;
   approche1: Approche;
+  profilNormatif: ProfilNormatif;
+  risque: Risque;
   approche2: Options2g['approche'];
   consequences: ClasseConsequences;
   dimensionsControlees: boolean;
@@ -74,7 +86,7 @@ export interface Saisie {
 }
 
 export type Calcul =
-  | { generation: '1re'; donnees: DonneesSemelle; approche: Approche }
+  | { generation: '1re'; donnees: DonneesSemelle; approche: Approche; profilNormatif: ProfilNormatif; risque: Risque }
   | { generation: '2e'; donnees: DonneesSemelle; options: Options2g };
 
 export type Lecture = { ok: true; calcul: Calcul } | { ok: false; message: string };
@@ -89,6 +101,8 @@ export function saisieParDefaut(): Saisie {
   return {
     generation: '1re',
     approche1: 'DA1',
+    profilNormatif: 'recommande',
+    risque: 'normal',
     approche2: 'a+b',
     consequences: 'CC2',
     dimensionsControlees: false,
@@ -223,7 +237,9 @@ export function lireSaisie(s: Saisie): Lecture {
     const donnees: DonneesSemelle = { B, L, D, ep, gammaBeton, actions, sol, tassement: tassementDe(s) };
 
     if (generation === '1re') {
-      return { ok: true, calcul: { generation: '1re', donnees, approche: s.approche1 } };
+      // ANB 2022 : l'approche est DA1, quelle que soit la liste.
+      const approche: Approche = s.profilNormatif === 'anb2022' ? 'DA1' : s.approche1;
+      return { ok: true, calcul: { generation: '1re', donnees, approche, profilNormatif: s.profilNormatif, risque: s.risque } };
     }
 
     return {
@@ -247,7 +263,7 @@ export function lireSaisie(s: Saisie): Lecture {
 
 export function verifier(calcul: Calcul): Resultat {
   if (calcul.generation === '1re') {
-    const p = profil1g();
+    const p = profil1gDe(calcul.profilNormatif, calcul.risque);
     return {
       ...verifierSemelle1g(calcul.donnees, calcul.approche, p),
       generation: '1re',
@@ -318,6 +334,8 @@ export function relire(contenu: string): Saisie {
   return {
     generation: choixOu(brut.generation, ['1re', '2e'] as const, d.generation),
     approche1: choixOu(brut.approche1, ['DA1', 'DA2', 'DA3'] as const, d.approche1),
+    profilNormatif: choixOu(brut.profilNormatif, ['recommande', 'anb2022', 'lu'] as const, d.profilNormatif),
+    risque: choixOu(brut.risque, ['faible', 'normal', 'eleve'] as const, d.risque),
     approche2: choixOu(brut.approche2, ['a+b', 'c', 'd'] as const, d.approche2),
     consequences: choixOu(brut.consequences, ['CC1', 'CC2', 'CC3'] as const, d.consequences),
     dimensionsControlees: boolOu(brut.dimensionsControlees, d.dimensionsControlees),

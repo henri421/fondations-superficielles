@@ -8,6 +8,7 @@
 
 import {
   avertissement2eGeneration,
+  avertissementAnnexeLu,
   blocsEnTexte,
   brancherFeuilles,
   definirLangue,
@@ -163,6 +164,21 @@ function ajusterAffichage(): void {
   if (bandeau !== null) {
     bandeau.hidden = saisie.generation !== '2e';
     bandeau.textContent = avertissement2eGeneration();
+  }
+  const bandeauLu = document.querySelector<HTMLElement>('[data-role="bandeau-annexe"]');
+  if (bandeauLu !== null) {
+    bandeauLu.textContent = avertissementAnnexeLu();
+    bandeauLu.hidden = saisie.generation !== '1re' || saisie.profilNormatif !== 'lu' || bandeauLu.textContent === '';
+  }
+  for (const z of formulaire.querySelectorAll<HTMLElement>('[data-si-profil]')) {
+    z.hidden = z.dataset.siProfil !== saisie.profilNormatif;
+  }
+  // ANB 2022 : l'approche est DA1, liste grisee (`lireSaisie` passe DA1 de toute facon).
+  const approche = formulaire.querySelector<HTMLSelectElement>('[data-champ="approche1"]');
+  if (approche !== null) {
+    const anb = saisie.profilNormatif === 'anb2022';
+    approche.disabled = anb;
+    approche.value = anb ? 'DA1' : saisie.approche1;
   }
   for (const g of formulaire.querySelectorAll<HTMLElement>('[data-groupe]')) {
     g.hidden = g.dataset.groupe !== saisie.generation;
