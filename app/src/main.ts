@@ -167,7 +167,7 @@ function ajusterAffichage(): void {
   }
   const bandeauLu = document.querySelector<HTMLElement>('[data-role="bandeau-annexe"]');
   if (bandeauLu !== null) {
-    bandeauLu.textContent = avertissementAnnexeLu();
+    bandeauLu.textContent = avertissementAnnexeLu(false);
     bandeauLu.hidden = saisie.generation !== '1re' || saisie.profilNormatif !== 'lu' || bandeauLu.textContent === '';
   }
   for (const z of formulaire.querySelectorAll<HTMLElement>('[data-si-profil]')) {

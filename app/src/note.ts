@@ -158,7 +158,7 @@ export function noteDuCalcul(
   };
   const avertissements = [
     ...(r.generation === '2e' ? [avertissement2eGeneration()] : []),
-    ...(calcul.generation === '1re' && calcul.profilNormatif === 'lu' && avertissementAnnexeLu() !== '' ? [avertissementAnnexeLu()] : []),
+    ...(calcul.generation === '1re' && calcul.profilNormatif === 'lu' && avertissementAnnexeLu(false) !== '' ? [avertissementAnnexeLu(false)] : []),
     ...r.alertes.map((a) => alertes[a] ?? phrase(a)),
   ];
   if (r.combinaisons.some((c) => c.cas.some((x) => x.nonDrainee?.glissement.limite04))) {
