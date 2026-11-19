@@ -14,7 +14,7 @@ import {
   definirLangue,
   echapper,
   langueDuDocument,
-  noteDeCalculHtml,
+  noteDeCalculHtml, telechargerNotePdf,
   notationHtml,
   ouvrirOuTelecharger,
   resultatsEnCsv,
@@ -379,9 +379,12 @@ document.addEventListener('click', (evenement) => {
   } else if (action === 'exporter-resultats') {
     const blocs = [blocEntrees(d.calcul), ...blocsResultat(d.resultat)];
     telecharger('fondations-superficielles-resultats.csv', resultatsEnCsv(blocsEnTexte(blocs)), 'text/csv;charset=utf-8');
-  } else if (action === 'exporter-note') {
+  } else if (action === 'exporter-note' || action === 'exporter-note-pdf') {
     const note = noteDuCalcul(d.calcul, d.resultat, cartouche());
-    ouvrirOuTelecharger('fondations-superficielles-note.html', noteDeCalculHtml(note, STYLES_TRACE));
+    const noteCalc = note;
+    // PDF construit au clic ; en cas d'echec, la note HTML prend le relais.
+    if (action === 'exporter-note-pdf') void telechargerNotePdf('fondations-superficielles-note.pdf', noteCalc, STYLES_TRACE).catch(() => ouvrirOuTelecharger('fondations-superficielles-note.html', noteDeCalculHtml(noteCalc, STYLES_TRACE)));
+    else ouvrirOuTelecharger('fondations-superficielles-note.html', noteDeCalculHtml(noteCalc, STYLES_TRACE));
   }
 });
 
